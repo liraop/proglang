@@ -1,1 +1,1 @@
-# prolang
+# proglang
