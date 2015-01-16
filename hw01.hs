@@ -25,14 +25,14 @@ convert t = pleaseFix
 isVowel :: Char -> Bool
 isVowel ch = ch `elem` ['a','e','i','o','u']
 
-
+        
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 -- Problem 3: Disemvoweling 
 
 -- disEmvowel str = the result of removing all vowels from str
 disEmvowel :: String -> String
-disEmvowel str = pleaseFix
+disEmvowel str =  [ c | c <- str, c `notElem` ['a','e','i','o','u']]
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
