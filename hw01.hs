@@ -45,7 +45,8 @@ disEmvowel str =  [ c | c <- str, c `notElem` ['a','e','i','o','u']]
 --     returns: "feefiefoefum"
 -- Use a helper function if you want
 smash :: String -> String
-smash str = pleaseFix
+smash str = [ toLower(x) | x <- str, isAlpha(x)]                  
+
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
@@ -77,7 +78,7 @@ shift n str = pleaseFix
 
 capitalized :: String -> String
 capitalized "" = ""
-capitalized (c:cs) =  toUpper(c):(map toLower(cs))
+capitalized (c:cs) = toUpper(c):(map toLower(cs))
 
 ------------------------------------------------------------------------
 -- Problem 7: Title
