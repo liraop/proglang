@@ -77,7 +77,7 @@ shift n str = pleaseFix
 
 capitalized :: String -> String
 capitalized "" = ""
-capitalized (c:cs) = pleaseFix
+capitalized (c:cs) =  toUpper(c):(map toLower(cs))
 
 ------------------------------------------------------------------------
 -- Problem 7: Title
