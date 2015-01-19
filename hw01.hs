@@ -15,7 +15,12 @@ pleaseFix = error "Please fix me!!"
 
 convert :: Int -> (Int,Int,Int)
 convert 0 = (0,0,0)
-
+convert t
+        | t < 60 = (0,0,t)
+        | otherwise = (h,m,s)
+        where
+          (h,m,s) = (t `div` 3600, (t `mod`3600)`div`60 , ((t `mod`3600)`mod`60))
+          
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 -- Problem 2: Testing for Vowels
@@ -75,7 +80,7 @@ toChar n = if (0<= n && n <= 25) then chr (n+ord 'a') else '?'
 -- You can use toNum, toChar, and mod. (There are other ways.)
 -- Also use a helper function if you want.
 
--- function to smash and transform a word in numbers
+-- function to smash and transform word in numbers
 smashToNum n str = [ x+n | x <- map toNum(smash(str))]
 -- function to format the words/numbers on limit cases
 helperFormat x
