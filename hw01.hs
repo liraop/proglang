@@ -14,7 +14,7 @@ pleaseFix = error "Please fix me!!"
 -- Problem 1: Time conversions
 
 convert :: Int -> (Int,Int,Int)
-convert t = pleaseFix
+convert 0 = (0,0,0)
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
@@ -25,6 +25,8 @@ convert t = pleaseFix
 isVowel :: Char -> Bool
 isVowel ch = ch `elem` ['a','e','i','o','u']
 
+-- based on http://learnyouahaskell.com/starting-out#im-a-list-comprehension
+
         
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
@@ -33,6 +35,8 @@ isVowel ch = ch `elem` ['a','e','i','o','u']
 -- disEmvowel str = the result of removing all vowels from str
 disEmvowel :: String -> String
 disEmvowel str =  [ c | c <- str, c `notElem` ['a','e','i','o','u']]
+
+--- based on http://learnyouahaskell.com/starting-out#im-a-list-comprehension
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
@@ -45,6 +49,7 @@ disEmvowel str =  [ c | c <- str, c `notElem` ['a','e','i','o','u']]
 --     returns: "feefiefoefum"
 -- Use a helper function if you want
 smash :: String -> String
+smash "" = ""
 smash str = [ toLower(x) | x <- str, isAlpha(x)]                  
 
 
@@ -69,8 +74,19 @@ toChar n = if (0<= n && n <= 25) then chr (n+ord 'a') else '?'
 -- E.g.,  shift 25 "abcxyz" returns "zabwxy"
 -- You can use toNum, toChar, and mod. (There are other ways.)
 -- Also use a helper function if you want.
+
+-- function to smash and transform a word in numbers
+smashToNum n str = [ x+n | x <- map toNum(smash(str))]
+-- function to format the words/numbers on limit cases
+helperFormat x
+     | x > 25 = x - 26
+     | x < 0 = x + 26 
+     | otherwise = x
+
 shift :: Int -> String -> String
-shift n str = pleaseFix
+shift n "" =  ""
+shift 0 str = smash(str)
+shift n str = map toChar(map helperFormat(smashToNum n str))
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
@@ -83,9 +99,16 @@ capitalized (c:cs) = toUpper(c):(map toLower(cs))
 ------------------------------------------------------------------------
 -- Problem 7: Title
 
+--- Helper function to capitalize words
+--- if len(word) > 4 or return it unmodified  
+helper :: String -> String
+helper (str)
+        | length str > 4 = capitalized str
+        | otherwise = str
+
 title :: [String] -> [String]
 title [] = []
-title (first:rest) = pleaseFix
+title (first:rest) = capitalized(first):map helper(rest)
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
