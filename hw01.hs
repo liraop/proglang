@@ -81,10 +81,13 @@ toChar n = if (0<= n && n <= 25) then chr (n+ord 'a') else '?'
 -- Also use a helper function if you want.
 
 -- function to smash and transform a word in number
+smashToNum :: String -> [Int] 
 smashToNum str = [toNum(word) | word <- smash(str)]
 -- function to add shift value to the word in number
+shiftToNum :: Int -> String -> [Int] 
 shiftToNum n str = [ x+n | x <- smashToNum(str)]
 -- function to format the words/numbers on limit cases
+helperFormat :: Int -> Int 
 helperFormat x
      | x > 25 || x < 0 = x `mod` 26
      | otherwise = x
