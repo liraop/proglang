@@ -80,8 +80,10 @@ toChar n = if (0<= n && n <= 25) then chr (n+ord 'a') else '?'
 -- You can use toNum, toChar, and mod. (There are other ways.)
 -- Also use a helper function if you want.
 
--- function to smash and transform word in numbers
-smashToNum n str = [ x+n | x <- map toNum(smash(str))]
+-- function to smash and transform a word in number
+smashToNum str = [toNum(word) | word <- smash(str)]
+-- function to add shift value to the word in number
+shiftToNum n str = [ x+n | x <- smashToNum(str)]
 -- function to format the words/numbers on limit cases
 helperFormat x
      | x > 25 || x < 0 = x `mod` 26
@@ -90,7 +92,7 @@ helperFormat x
 shift :: Int -> String -> String
 shift n "" =  ""
 shift 0 str = smash(str)
-shift n str = map toChar(map helperFormat(smashToNum n str))
+shift n str = [toChar(intWord) | intWord <- [helperFormat(word) | word <- shiftToNum n str]]
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
@@ -98,7 +100,7 @@ shift n str = map toChar(map helperFormat(smashToNum n str))
 
 capitalized :: String -> String
 capitalized "" = ""
-capitalized (c:cs) = toUpper(c):(map toLower(cs))
+capitalized (c:cs) = toUpper(c):[toLower(x) | x <- cs]
 
 ------------------------------------------------------------------------
 -- Problem 7: Title
@@ -112,7 +114,7 @@ helper (str)
 
 title :: [String] -> [String]
 title [] = []
-title (first:rest) = capitalized(first):map helper(rest)
+title (first:rest) = capitalized(first):[helper(x) | x <- rest]
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
