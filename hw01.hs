@@ -84,8 +84,7 @@ toChar n = if (0<= n && n <= 25) then chr (n+ord 'a') else '?'
 smashToNum n str = [ x+n | x <- map toNum(smash(str))]
 -- function to format the words/numbers on limit cases
 helperFormat x
-     | x > 25 = x - 26
-     | x < 0 = x + 26 
+     | x > 25 || x < 0 = x `mod` 26
      | otherwise = x
 
 shift :: Int -> String -> String
