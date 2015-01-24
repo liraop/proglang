@@ -74,6 +74,7 @@ mmaxDepth [] = -1
 -- Problem 3: Collecting BTree leaves
 bleaves :: BTree -> String
 bleaves Empty = ""
+bleaves (Branch l tl tr) = if tl == Empty && tr == Empty then l:[] ++ bleaves tl ++ bleaves tr else bleaves tl ++ bleaves tr
 
 ------------------------------------------------------------------------
 -- Problem 4: Collecting MTree leaves
