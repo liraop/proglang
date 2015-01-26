@@ -67,8 +67,9 @@ bmaxDepth ::  BTree -> Int
 bmaxDepth Empty = -1 
 bmaxDepth (Branch _ tl tr) = 1 + max (bmaxDepth tl) (bmaxDepth tr) 
 ------------------------------------------------------------------------
--- Problem 2: 
-mmaxDepth [] = -1                     
+-- Problem 2:
+--mmaxDepth :: MTree -> Int
+--mmaxDepth [] = -1
 
 ------------------------------------------------------------------------
 -- Problem 3: Collecting BTree leaves
@@ -82,18 +83,19 @@ mleaves :: MTree -> String
 mleaves = fix 
 
 ------------------------------------------------------------------------
--- Problem 5: BTree levels 
+-- Problem 5: BTree levels
 blevel :: Int -> BTree -> String
-blevel = fix 
+blevel 0 _ = ""
 
 ------------------------------------------------------------------------
 -- Problem 6: MTree levels 
 mlevel :: Int -> MTree -> String
-mlevel = fix 
+mlevel 0 _ = ""
 
 ------------------------------------------------------------------------
 -- Problem 7: Postfix
-postfix = fix 
+postfix Empty = ""
+postfix (Branch l tl tr) = postfix tl ++ postfix tr ++ [l]
 
 ------------------------------------------------------------------------
 -- Problem 8: reconstructing a BTree from its traversals
