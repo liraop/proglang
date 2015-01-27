@@ -67,30 +67,47 @@ bmaxDepth ::  BTree -> Int
 bmaxDepth Empty = -1 
 bmaxDepth (Branch _ tl tr) = 1 + max (bmaxDepth tl) (bmaxDepth tr) 
 ------------------------------------------------------------------------
--- Problem 2:
---mmaxDepth :: MTree -> Int
---mmaxDepth [] = -1
+-- Problem 2: MTree depth
+mmaxDepth (Node _ []) = 1
+mmaxDepth (Node _ ns) = 1 + getMaxList [mmaxDepth n | n <- ns]
+
+-- helper function to get the maximum int
+-- from a list of ints
+getMaxList :: [Int] -> Int
+getMaxList [] = 0
+getMaxList [x] = x
+getMaxList (fst:snd:rst) = max (max (fst) (snd)) (getMaxList rst)
+
 
 ------------------------------------------------------------------------
 -- Problem 3: Collecting BTree leaves
 bleaves :: BTree -> String
 bleaves Empty = ""
-bleaves (Branch l tl tr) = if tl == Empty && tr == Empty then l:[] ++ bleaves tl ++ bleaves tr else bleaves tl ++ bleaves tr
+bleaves (Branch l tl tr) = if tl == Empty && tr == Empty
+                           then [l] ++ bleaves tl ++ bleaves tr
+                           else bleaves tl ++ bleaves tr
 
 ------------------------------------------------------------------------
 -- Problem 4: Collecting MTree leaves
 mleaves :: MTree -> String
-mleaves = fix 
+mleaves (Node l []) = [l] 
+mleaves (Node l ns) =  concat [mleaves n | n <- ns]
 
 ------------------------------------------------------------------------
 -- Problem 5: BTree levels
 blevel :: Int -> BTree -> String
 blevel 0 _ = ""
+blevel i (Empty) = ""
+blevel 1 (Branch l _ _) = [l]
+blevel i (Branch l tl tr) = blevel (i-1) (tl) ++ blevel (i-1) (tr)
+                           
 
 ------------------------------------------------------------------------
 -- Problem 6: MTree levels 
 mlevel :: Int -> MTree -> String
 mlevel 0 _ = ""
+mlevel 1 (Node l _) = [l]
+mlevel i (Node l ns) = concat [mlevel (i-1) n | n <- ns]
 
 ------------------------------------------------------------------------
 -- Problem 7: Postfix
@@ -100,12 +117,14 @@ postfix (Branch l tl tr) = postfix tl ++ postfix tr ++ [l]
 ------------------------------------------------------------------------
 -- Problem 8: reconstructing a BTree from its traversals
 reconstruct :: String -> String -> BTree
-reconstruct = fix 
+reconstruct "" "" = Empty
+reconstruct i:is "" = (Branch i Empty Empty)
+reconstruct i 
 
 ------------------------------------------------------------------------
 -- Problem 9: making BTrees
-makeTrees 0 = [Empty]
-makeTrees n = fix
+makeTrees 0 = Empty
+makeTrees 1 = [Branch 'x' Empty Empty]
 
 ------------------------------------------------------------------------
 -- Drawing
@@ -186,6 +205,12 @@ t13 = Branch 'm'
      (Branch 't' Empty Empty)
      (Branch 'x' Empty
              (Branch 'j' Empty Empty))
+             
+t0 = Branch 'r' Empty Empty
+
+t3 = Empty
+
+
 
 -- QuickCheck BTree generator
 instance Arbitrary BTree where
