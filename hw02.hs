@@ -7,6 +7,7 @@ import System.IO( hPutStrLn, withFile, IOMode(WriteMode) )
 import Control.Monad( liftM, liftM2)
 import Data.List
 import Data.Char
+import Text.Printf hiding (toChar)
 
 
 
@@ -68,7 +69,7 @@ bmaxDepth Empty = -1
 bmaxDepth (Branch _ tl tr) = 1 + max (bmaxDepth tl) (bmaxDepth tr) 
 ------------------------------------------------------------------------
 -- Problem 2: MTree depth
-mmaxDepth (Node _ []) = 1
+mmaxDepth (Node _ []) = 0
 mmaxDepth (Node _ ns) = 1 + getMaxList [mmaxDepth n | n <- ns]
 
 -- helper function to get the maximum int
@@ -118,16 +119,14 @@ postfix (Branch l tl tr) = postfix tl ++ postfix tr ++ [l]
 -- Problem 8: reconstructing a BTree from its traversals
 reconstruct :: String -> String -> BTree
 reconstruct "" "" = Empty
-reconstruct i:is "" = (Branch i Empty Empty)
-reconstruct i 
 
 ------------------------------------------------------------------------
 -- Problem 9: making BTrees
-makeTrees 0 = Empty
-makeTrees 1 = [Branch 'x' Empty Empty]
+makeTrees 0 = [Empty]
+makeTrees 1 = [Branch 'x' Empty Empty] 
 
 ------------------------------------------------------------------------
--- Drawing
+-- drawing
 ------------------------------------------------------------------------
 -- The following assumes Mac OS X with graphviz installed.
 -- (See the download section of: http://www.graphviz.org.)
@@ -211,6 +210,62 @@ t0 = Branch 'r' Empty Empty
 t3 = Empty
 
 
+t02 = Node 'x' []
+
+-----------------------------------------------------------------------
+-- Function to call all my tests
+-- It returns true if the test is sucessfull. 
+
+tests :: [(String, Bool)]
+tests = [ ("bmaxDepth_test1",     bmaxDepth_test1)
+        , ("bmaxDepth_test2",       bmaxDepth_test2)  
+        , ("bmaxDepth_test3",  bmaxDepth_test3)  
+        , ("mmaxDepth_test1",     mmaxDepth_test1)  
+        , ("mmaxDepth_test2",     mmaxDepth_test2)  
+        , ("blevel_test1",       blevel_test1)  
+        , ("blevel_test2",       blevel_test2)  
+        , ("blevel_test3",       blevel_test3)
+        , ("blevel_test4",       blevel_test4)
+        , ("mlevel_test1",       mlevel_test1)  
+        , ("mlevel_test2",       mlevel_test2)  
+        , ("mlevel_test3",       mlevel_test3)
+        , ("mlevel_test4",       mlevel_test4)
+        ]
+
+
+-----------------------------------------------------------------------
+-- Testing for bmaxDepth
+
+bmaxDepth_test1 = bmaxDepth t13 == 2
+bmaxDepth_test2 = bmaxDepth t0 == 0
+bmaxDepth_test3 = bmaxDepth t3 == -1
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-- Testing for mmaxDepth
+
+mmaxDepth_test1 = mmaxDepth t2 == 2
+mmaxDepth_test2 = mmaxDepth t02 == 0
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-- Testing for blevel
+
+blevel_test1 = blevel 0 t13 == ""
+blevel_test2 = blevel 1241 t13 == ""
+blevel_test3 = blevel 3 Empty == ""
+blevel_test4 = blevel 1 t0 == "r"
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-- Testing for mlevel
+
+mlevel_test1 = mlevel 0 t2 == ""
+mlevel_test2 = mlevel 1241 t2 == ""
+mlevel_test3 = mlevel 1 t02 == "x"
+mlevel_test4 = mlevel 3 t2 == "mgjz"
+
+-----------------------------------------------------------------------
 
 -- QuickCheck BTree generator
 instance Arbitrary BTree where
