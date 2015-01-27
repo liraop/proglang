@@ -2,6 +2,7 @@
 
 Repository for programming languages course on Syracuse University - Spring 2015.
 
-What happened so far :
+Topics/hw:
 
--- Haskell Learning
+-- hw01: Haskell basics       
+-- hw02: Recursion and trees
