@@ -129,15 +129,11 @@ isNNF (Not (p :&: q ))  = False
 isNNF (Not (p :|: q ))  = False
 isNNF (Not (p :->: q ))  = False
 isNNF (Not (p :<->: q )) = False
---isNNF (Not T) = False
---isNNF (Not F) = False
 isNNF (Not (Not p)) = False
 isNNF (p :->: q )  = False 
 isNNF (p :<->: q ) = False
 isNNF (p :&: q) = isNNF(q) && isNNF(p)
 isNNF (p :|: q) = isNNF(q) && isNNF(p)
---isNNF T = True
---isNNF F = True
 isNNF _ = True
 
 ------------------------------------------------------------------------
@@ -177,25 +173,37 @@ hasConstants _ = False
 -- Problem 4 -----------------------------------------------------------
 toTidy :: Prop -> Prop
 
-toTidy p = toTidy'(toNNF(p))
+toTidy p = if (isTidy(p')) then p' else toTidy'(p')
+           where
+                p' = toTidy'(toNNF(p))
 
 toTidy' (T) = T
 toTidy' (F) = F
 toTidy' (Not T) = F      
 toTidy' (Not F) = T
 
+toTidy' (Not p) = Not p
+
+toTidy' (T :|: T) = T
+toTidy' (Not q :|: T) = T
+toTidy' (T :|: Not q) = T
+toTidy' (Not q :|: Not F) = T
+toTidy' (Not F :|: Not q) = T
+
 toTidy' (p :|: T) = T
 toTidy' (T :|: p) = T
-toTidy' (p :|: F) = p
-toTidy' (F :|: p) = p
-toTidy' (p :|: q) = toTidy(p) :|: toTidy(q)
+toTidy' (p :|: F) = toTidy'(p)
+toTidy' (F :|: p) = toTidy'(p)
+toTidy' (p :|: q) = toTidy'(p) :|: toTidy'(q)
 
-toTidy' (T :&: p) = p
-toTidy' (p :&: T) = p
+toTidy' (T :&: p) = toTidy'(p)
+toTidy' (p :&: T) = toTidy'(p)
 toTidy' (p :&: F) = F
 toTidy' (F :&: p) = F
-toTidy' (p :&: q) = toTidy(p) :|: toTidy(q)
+toTidy' (p :&: q) = toTidy'(p) :|: toTidy'(q)
 
+toTidy'(p) = p
+           
 --------------------------------------------------------------------------
 -- The following is lifted from the Univ. of Edinburg --------------------
 --------------------------------------------------------------------------
