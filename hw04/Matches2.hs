@@ -7,6 +7,8 @@
 --									--
 -------------------------------------------------------------------------- 
 
+-- Modified by Pedro de Oliveira Lira - pdeolive@syr.edu
+
 module Matches2 where
 
 import RegExp2
@@ -47,10 +49,10 @@ matches (Star r) st
 -- Problem 5: Add equations for Opt and Plus
 
 matches (Opt r) st
-    = error ("Matching for " ++ (printRE (Opt r)) ++ " not yet implemented!")
+    = matches Epsilon st || matches r st
 
 matches (Plus r) st
-    = error ("Matching for " ++ (printRE (Plus r)) ++ " not yet implemented!")
+    = or [matches r s1 && matches (Star r) s2 | (s1,s2) <- splits st ]
 
 -- Try: quickCheck prop_equivA
 prop_equivA :: Reg -> TestStr -> Bool

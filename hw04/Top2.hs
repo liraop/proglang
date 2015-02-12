@@ -26,5 +26,10 @@ import DrawNfa
 nonEmpty :: Reg -> Reg
          
 nonEmpty Empty = Empty
-nonEmpty (Or e1 e2) = Or nonEmpty(e1) nonEmpty(e2)
-nonEmpty (Star e) = Then e Star e
+nonEmpty Epsilon = Empty
+nonEmpty (Literal x) = Literal x
+nonEmpty (Star e) = Plus e
+nonEmpty (Or e1 e2) =  Or (nonEmpty e1) (nonEmpty e2)
+nonEmpty (Then e1 e2) = Then (nonEmpty e1) (nonEmpty e2)
+nonEmpty (Plus e) = nonEmpty(e)
+nonEmpty (Opt e) = nonEmpty(e)

@@ -119,16 +119,57 @@ title :: [String] -> [String]
 title [] = []
 title (first:rest) = capitalized(first):[helper(x) | x <- rest]
 
+
+-----------------------------------------------------------------------
+-- Tests created by student
+
+-- These are the tests made by me. I decided to use the
+-- whole output structure that already existed on the
+-- homework1 file. That way, I created these test cases
+-- and their output is print when quickCheck runs.
+-- Although they are 'quickCheck'tests, they are not
+-- automatically made.
+
+convert_myTest1 = convert (0) == (0,0,0)
+convert_myTest2 = convert (59) == (0,0,59)
+convert_myTest3 = convert (120) == (0,2,0)
+
+vowel_myTest1 = isVowel(' ') == False
+vowel_myTest2 = isVowel('!') == False
+vowel_myTest3 = (isVowel('e') == True) && (isVowel('E') == False)
+
+disemv_myTest1 = disEmvowel("aeiou") == ""
+disemv_myTest2 = disEmvowel("") == ""
+disemv_myTest3 = disEmvowel("babaca") == "bbc"
+
+smash_myTest1 = smash("            ") == ""
+smash_myTest2 = smash("The Castle of Wolfstein") == ("thecastleofwolfstein")
+smash_myTest3 = smash("135126436!!!!!") == ""
+
+shift_myTest1 = shift 1 ("") == ""
+shift_myTest2 = shift (-1) ("aaaa") == ("zzzz")
+shift_myTest3 = shift 1 ("zzzz") == ("aaaa")
+
+cap_myTest1 = capitalized("") == ""
+cap_myTest2 = capitalized("the") == "The"
+cap_myTest3 = capitalized("hUGEWORDSTOGETHERINONE") == "Hugewordstogetherinone"
+
+title_myTest1 = title([""]) == [""]
+title_myTest2 = title(["the","small","title"]) == ["The","Small","Title"]
+title_myTest3 = title(["the","not","so","big","title"]) == ["The","not","so","big","Title"]
+
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 -- test properties
+
 
 convert_prop t = (h*60+m)*60+s == (abs t)
                  && 0 <= h && 0 <= m && 0 <= s
                  && m < 60 && s < 60
     where
       (h,m,s) = convert (abs t)
+
 
 -- nonsense words
 --    Try: sample (arbitrary :: Gen Wrd)
@@ -182,7 +223,6 @@ instance Arbitrary Twaddle
               do wrds <- listOf arbitrary 
                  return (Twaddle (concat [cs | (Wrd2 cs) <- wrds,
                                                not (null cs) ]))
-
 vowel_prop c = isVowel c == (p (ord c - ord 'a') == 0)
     where 
       p x = x*(8960 + x*(-4448 + x*(720 + x*(-46 + x))))
@@ -219,13 +259,36 @@ title_prop (Blither cs)
 
 tests :: [(String, IO ())]
 tests = [ ("convert prop",     quickCheck convert_prop)
-        , ("vowel prop",       quickCheck vowel_prop)  
-        , ("disemvowel prop",  quickCheck disemv_prop)  
-        , ("smash prop",       quickCheck smash_prop)  
+        , ("convert myTest1",   quickCheck convert_myTest1)
+        , ("convert myTest2",   quickCheck convert_myTest2)
+        , ("convert myTest3",   quickCheck convert_myTest3)
+        , ("vowel prop",       quickCheck vowel_prop)
+        , ("vowel myTest1",     quickCheck vowel_myTest1)
+        , ("vowel myTest2",     quickCheck vowel_myTest2)
+        , ("vowel myTest3",     quickCheck vowel_myTest3)  
+        , ("disemvowel prop",  quickCheck disemv_prop)
+        , ("disemvowel myTest1", quickCheck disemv_myTest1)
+        , ("disemvowel myTest2", quickCheck disemv_myTest2)
+        , ("disemvowel myTest3", quickCheck disemv_myTest3)
+        , ("smash prop",       quickCheck smash_prop)
+        , ("smash myTest1",       quickCheck smash_myTest1)
+        , ("smash myTest2",       quickCheck smash_myTest2)
+        , ("smash myTest3",       quickCheck smash_myTest3)
         , ("shift prop 1",     quickCheck shift1_prop)  
-        , ("shift prop 2",     quickCheck shift2_prop)  
-        , ("capitalized prop", quickCheck cap_prop)  
+        , ("shift prop 2",     quickCheck shift2_prop)
+        , ("shift myTest1",     quickCheck shift_myTest1)  
+        , ("shift myTest2",     quickCheck shift_myTest2)  
+        , ("shift myTest3",     quickCheck shift_myTest3)  
+        , ("capitalized prop", quickCheck cap_prop)
+        , ("capitalized myTest1", quickCheck cap_myTest1)
+        , ("capitalized myTest2", quickCheck cap_myTest2)
+        , ("capitalized myTest3", quickCheck cap_myTest3)
         , ("title prop",       quickCheck title_prop)
+        , ("title myTest1",       quickCheck title_myTest1)
+        , ("title myTest2",       quickCheck title_myTest2)
+        , ("title myTest3",       quickCheck title_myTest3)
         ]
 
+
 testRun = mapM_ (\(s,a) -> (printf "%-25s: " s) >> a) tests
+

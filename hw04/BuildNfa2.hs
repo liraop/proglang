@@ -24,6 +24,7 @@ import ImplementNfa
 import DrawNfa
 import Test.QuickCheck
 
+-- Modified by Pedro de Oliveira Lira - pdeolive@syr.edu
 
 -------------------------------------------------------------------------- 
 --									--
@@ -55,6 +56,7 @@ build (Star r)     = m_star (build r)
 -- Problem 5(b): Add cases for Opt and Plus
 build (Opt r)  
     = error ("Translation for " ++ (printRE (Opt r)) ++ " not yet implemented!")
+    
 build (Plus r)  
     = error ("Translation for " ++ (printRE (Plus r)) ++ " not yet implemented!")
 

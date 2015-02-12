@@ -56,6 +56,20 @@ bmaxDepth t = foldT (-1) g t
 -- Testing
 ------------------------------------------------------------------------
 
+bmaxDepth_test1 = bmaxDepth t13 == 2
+bmaxDepth_test2 = bmaxDepth t0 == 0
+bmaxDepth_test3 = bmaxDepth t3 == -1
+
+
+-- Function to call all my tests
+-- It returns true if the test is sucessfull.
+
+tests :: [(String, Bool)]
+tests = [ ("bmaxDepth_test1",     bmaxDepth_test1)
+        , ("bmaxDepth_test2",       bmaxDepth_test2)  
+        , ("bmaxDepth_test3",  bmaxDepth_test3)]
+
+
 squash_pred xs = (squash (+) ys == squash' (+) ys)
            where ys = map (`mod` 1000) xs
 
