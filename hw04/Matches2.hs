@@ -9,6 +9,7 @@
 
 -- Modified by Pedro de Oliveira Lira - pdeolive@syr.edu
 
+
 module Matches2 where
 
 import RegExp2
@@ -44,6 +45,7 @@ matches (Then r1 r2) st
 matches (Star r) st
   = matches Epsilon st || 
       or [ matches r s1 && matches (Star r) s2 | (s1,s2) <- frontSplits st ]
+
 
 --------------------------------------------------------------------------
 -- Problem 5: Add equations for Opt and Plus
@@ -86,4 +88,33 @@ splits st = [ splitAt n st | n <- [0 .. length st] ]
 frontSplits :: [a] -> [ ([a],[a]) ]
 
 frontSplits st = [ splitAt n st | n <- [1.. length st] ]
+
+
+-------------------------------------------------------------------------- 
+-------------------------------------------------------------------------- 
+--- Added Feb 11, 10pm
+-------------------------------------------------------------------------- 
+-------------------------------------------------------------------------- 
+-- For problem 4
+nonempty :: Reg -> Reg      
+nonempty Empty = Empty
+nonempty Epsilon = Empty
+nonempty (Literal x) = Literal x
+nonempty (Or e1 e2) =  Or (nonempty e1) (nonempty e2)
+nonempty (Star e) = Then (nonempty(e)) (Star e)
+nonempty (Then e1 e2) = Or (Then e1 (nonempty e2)) (Then (nonempty e1) e2)
+nonempty (Plus e) =  Then (nonempty(e)) (Star e)
+nonempty (Opt e) = nonempty(e)
+
+-- abcds = all nonempty strings over 'a', 'b', 'c', and 'd'.
+abcds = [ c:ds | ds <- ("":abcds), c <-['a'..'d']]
+
+-- To test nonempty, run
+--    quickCheck nonemp_prop
+
+nonemp_prop r 
+    = (not (matches nonempR ""))
+      &&
+      and [matches r cs == matches nonempR cs | cs <- take 200 abcds]
+    where nonempR = nonempty r
 
