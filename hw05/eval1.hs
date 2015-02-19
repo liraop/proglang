@@ -11,7 +11,7 @@ eval (Sub a1 a2)      = (eval a1) - (eval a2)
 eval (Mult a1 a2)     = (eval a1) * (eval a2)
 eval (Div a1 a2)      =
      | (eval a2) != 0 = (eval a1) / (eval a2)
-     | otherwise = 0
+     | otherwise = error "Division by 0"
 eval (Cond a1 a2 a3 ) =
      | (eval a1) != 0 = (eval a3)
      | otherwise = (eval a2)
