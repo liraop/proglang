@@ -48,7 +48,9 @@ evalC (While be cmd,s)      = evalC (cmd',s')
     where (BConst v,s') = evalB (be,s)
           cmd'          = if v then (Seq cmd (While be cmd)) else Skip
 
-evalC (Repeat cmd be,s)     = pleaseFixMe
+evalC (Repeat cmd be,s) = evalC (cmd',s')
+    where (BConst v,s') = evalB (be,s)
+          cmd'          = if v then cmd else (Seq cmd (Repeat cmd be))
 
 
 -- Try: evalA (ae,state4)

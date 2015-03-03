@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------
 -- LC, Small-step semantic interpreter
--- Authors:  Forgot to add my name, please subtract 5pts. 
+-- Authors:  Pedro de Oliveira Lira - pdeolive@syr.edu
 -- Version 3: 15 Feb 2015
 
 import LC 
@@ -21,29 +21,41 @@ type Config = (Phrase,State)
 step (A (ABin iop (AConst n1) (AConst n2)),s) 
     = (A (AConst n),s)
       where n = aApply iop n1 n2
+      
 step (A (ABin iop (AConst n1) ae2),s) 
     = (A (ABin iop (AConst n1) ae2'),s')
       where (A ae2',s') = step (A ae2,s)
+      
 step (A (ABin iop ae1 ae2),s) 
     = (A (ABin iop ae1' ae2),s')
-      where (A ae1',s') = step (A ae1,s)    
+      where (A ae1',s') = step (A ae1,s)
+      
 step (A (Val loc),s)            
     = (A (AConst (fetch s loc)),s)
 
 -- Boolean expressions
-step (B (Compare cop (AConst n1) (AConst n2)),s) = fixMe
-step (B (Compare cop (AConst n1) ae2),s)         = fixMe
-step (B (Compare cop ae1 ae2),s)                 = fixMe
+step (B (Compare cop (AConst n1) (AConst n2)),s) = (B (BConst b),s)
+                                                   where b = bApply cop n1 n2
+                                                   
+step (B (Compare cop (AConst n1) ae2),s)         = (B(Compare cop (AConst n1) ae2'),s')
+                                                   where (A ae2',s') = step (A ae2,s)
+                                                   
+step (B (Compare cop ae1 ae2),s)                 = (B (Compare cop ae1' ae2),s')
+                                                   where (A ae1',s') = step (A ae1,s)
 -- Set 
-step (C (Set loc (AConst n)),s) = (C Skip,set s loc n)
-step (C (Set loc ae),s)                          = fixMe
+step (C (Set loc (AConst n)),s)                  = (C Skip,set s loc n)
+step (C (Set loc ae),s)                          = (C (Set loc ae'),s')
+                                                   where (A ae',s') = step (A ae,s)
+
 -- sequencing 
-step (C (Seq Skip c2),s)                         = fixMe
-step (C (Seq c1 c2),s)                           = fixMe
+step (C (Seq Skip c2),s)                         = (C c2, s)
+step (C (Seq c1 c2),s)                           = (C (Seq c1' c2),s')
+                                                   where (C c1',s') = step (C c1,s)
 -- if
-step (C (If (BConst True)  c1 c2),s)             = fixMe
-step (C (If (BConst False) c1 c2),s)             = fixMe
-step (C (If be c1 c2),s)                         = fixMe 
+step (C (If (BConst True)  c1 c2),s)             = (C c1,s)
+step (C (If (BConst False) c1 c2),s)             = (C c2,s)
+step (C (If be c1 c2),s)                         = (C (If be' c1 c2),s')
+                                                   where (B be',s') = step (B be,s)        
       
 -- while
 step (C (While be c),s) = (C (If be (Seq c (While be c)) Skip),s)
