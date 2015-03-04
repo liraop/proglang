@@ -1,4 +1,4 @@
-# proglang
+# Programming Languages T&P
 
 Repository for programming languages course on Syracuse University - Spring 2015.
 
